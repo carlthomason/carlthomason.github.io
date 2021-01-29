@@ -1,0 +1,43 @@
+<!--form that connects power to character-->
+<body>
+    <h1>{{character.name}}</h1><br />
+    <h2>{{character.actual_name}}</h2><br />
+    <h2>Location: {{character.location}}</h2><br />
+    <h2>Hero?: {{character.is_hero}}</h2><br />
+
+    <h3>Add a Power</h3>
+    <form action="/characters/addPower" method='post'>
+        {% csrf_token %}
+        <div class='form-control'>
+            <input type="hidden" value='{{character.id}}' name='characterId' />
+            <select name="powerId">
+                {% for power in all_powers %}
+                    <option value="{{power.id}}">{{power.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input type = 'submit' class='btn btn-primary' value='Add' />
+    </form>
+<!--Table that shows all powers for each character-->
+    <table class = 'table table-hover table-dark'>
+        <thead class ='thead-dark'>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Decription</td>
+                <td>Related Characters</td>
+            </tr>
+        </thead>
+        {% for power in all_powers %}
+        <tr>
+            <td>{{power.id}}</td>
+            <td>{{power.name}}</td>
+            <td>{{power.description}}</td>
+            <td>
+                {% for character in power.owners.all %}
+                    {{character.name}}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
